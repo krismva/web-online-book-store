@@ -19,8 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 import web.app.onlinebookshop.dto.book.BookDto;
 import web.app.onlinebookshop.dto.book.BookSearchParameters;
 import web.app.onlinebookshop.dto.book.CreateBookRequestDto;
-import web.app.onlinebookshop.mapper.BookMapper;
-import web.app.onlinebookshop.model.Book;
 import web.app.onlinebookshop.service.BookService;
 
 @Tag(name = "Book CRUD operations", description = "Endpoints for books")
@@ -29,7 +27,6 @@ import web.app.onlinebookshop.service.BookService;
 @RequestMapping("/api/books")
 public class BookController {
     private final BookService bookService;
-    private final BookMapper bookMapper;
 
     @Operation(summary = "Get all books", description = "Get a list of all available books")
     @GetMapping
@@ -62,10 +59,7 @@ public class BookController {
     @PutMapping("/{id}")
     public BookDto update(@PathVariable Long id,
             @RequestBody @Valid CreateBookRequestDto requestDto) {
-        Book book = bookMapper.toModel(requestDto);
-        book.setId(id);
-        bookService.update(book);
-        return bookMapper.toDto(book);
+        return bookService.update(id, requestDto);
     }
 
     @Operation(summary = "Search book with parameters", description = "Search book with parameters")

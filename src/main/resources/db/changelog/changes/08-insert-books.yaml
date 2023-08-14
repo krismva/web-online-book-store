@@ -1,0 +1,31 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert-books
+      author: root
+      changes:
+        - insert:
+            tableName: books
+            columns:
+              - column: { name: title, value: "Iron Flame" }
+              - column: { name: author, value: "Rebecca Yarros" }
+              - column: { name: isbn, value: "1111_1" }
+              - column: { name: price, valueNumeric: 27.99 }
+              - column: {name: description, value: "good book" }
+
+        - insert:
+            tableName: books
+            columns:
+              - column: { name: title, value: "Funny Story" }
+              - column: { name: author, value: "Emily Henry" }
+              - column: { name: isbn, value: "2222_2" }
+              - column: { name: price, valueNumeric: 29.00 }
+              - column: { name: description, value: "good book" }
+
+        - insert:
+            tableName: books
+            columns:
+              - column: { name: title, value: "The Only One Left" }
+              - column: { name: author, value: "Riley Sager" }
+              - column: { name: isbn, value: "3333-3" }
+              - column: { name: price, valueNumeric: 25.00 }
+              - column: { name: description, value: "good book" }

@@ -1,6 +1,8 @@
 package web.app.onlinebookshop.service.impl;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -11,20 +13,26 @@ import web.app.onlinebookshop.dto.book.CreateBookRequestDto;
 import web.app.onlinebookshop.exception.EntityNotFoundException;
 import web.app.onlinebookshop.mapper.BookMapper;
 import web.app.onlinebookshop.model.Book;
+import web.app.onlinebookshop.model.Category;
 import web.app.onlinebookshop.repository.book.BookRepository;
 import web.app.onlinebookshop.repository.book.SpecificationBuilder;
+import web.app.onlinebookshop.repository.category.CategoryRepository;
 import web.app.onlinebookshop.service.BookService;
 
 @AllArgsConstructor
 @Service
 public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
+    private final CategoryRepository categoryRepository;
     private final BookMapper bookMapper;
     private final SpecificationBuilder<Book> specificationBuilder;
 
     @Override
     public BookDto save(CreateBookRequestDto bookRequestDto) {
         Book book = bookMapper.toModel(bookRequestDto);
+        getAllCategoriesByIds(bookRequestDto)
+                .forEach(category -> category.addBook(book));
+
         return bookMapper.toDto(bookRepository.save(book));
     }
 
@@ -48,15 +56,13 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public BookDto update(Book book) {
-        Book bookFromDb = bookRepository.findById(book.getId()).orElseThrow(() ->
-                new EntityNotFoundException("Can't find book with id " + book.getId()));
-        bookFromDb.setTitle(book.getTitle());
-        bookFromDb.setAuthor(book.getAuthor());
-        bookFromDb.setIsbn(bookFromDb.getIsbn());
-        bookFromDb.setPrice(book.getPrice());
-        bookFromDb.setDescription(book.getDescription());
-        bookFromDb.setCoverImage(book.getCoverImage());
+    public BookDto update(Long id, CreateBookRequestDto requestDto) {
+        if (!bookRepository.existsById(id)) {
+            throw new EntityNotFoundException("Can't find book by id: " + id);
+        }
+        Book book = bookMapper.toModel(requestDto);
+        book.setId(id);
+        book.setCategories(getAllCategoriesByIds(requestDto));
         return bookMapper.toDto(bookRepository.save(book));
     }
 
@@ -67,5 +73,14 @@ public class BookServiceImpl implements BookService {
                 .stream()
                 .map(bookMapper::toDto)
                 .toList();
+    }
+
+    private Set<Category> getAllCategoriesByIds(CreateBookRequestDto requestDto) {
+        return requestDto.getCategoryIds()
+                .stream()
+                .map(categoryRepository::findById)
+                .map(category -> category.orElseThrow(() ->
+                        new EntityNotFoundException("Can't find category: " + category)))
+                .collect(Collectors.toSet());
     }
 }
