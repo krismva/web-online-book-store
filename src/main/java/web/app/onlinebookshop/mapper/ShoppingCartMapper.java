@@ -8,5 +8,4 @@ import web.app.onlinebookshop.model.ShoppingCart;
 @Mapper(config = MapperConfig.class)
 public interface ShoppingCartMapper {
     ShoppingCartDto toDto(ShoppingCart shoppingCart);
-
 }

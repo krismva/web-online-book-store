@@ -37,8 +37,8 @@ public class ShoppingCartController {
     @Operation(summary = "Add a book to the shopping cart",
             description = "Add a book to the shopping cart")
     @PostMapping
-    public CartItemDto addBook(@RequestBody @Valid
-                                                CreateCartItemRequestDto requestDto) {
+    public CartItemDto addBook(
+            @RequestBody @Valid CreateCartItemRequestDto requestDto) {
         return shoppingCartService.addBook(requestDto);
     }
 
