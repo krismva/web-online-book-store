@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert-user-to-shopping-cart
+      author: root
+      changes:
+        - insert:
+            tableName: shopping_carts
+            columns:
+              - column: { name: user_id, value: "1" }

@@ -6,6 +6,7 @@ import web.app.onlinebookshop.dto.user.UserDto;
 import web.app.onlinebookshop.dto.user.UserRegisteredResponseDto;
 import web.app.onlinebookshop.dto.user.UserRegistrationRequestDto;
 import web.app.onlinebookshop.exception.RegistrationException;
+import web.app.onlinebookshop.model.User;
 
 public interface UserService {
     UserRegisteredResponseDto register(
@@ -13,4 +14,6 @@ public interface UserService {
             throws RegistrationException;
 
     List<UserDto> findAll(Pageable pageable);
+
+    User getUser();
 }
