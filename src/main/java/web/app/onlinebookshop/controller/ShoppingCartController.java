@@ -45,8 +45,9 @@ public class ShoppingCartController {
     @Operation(summary = "Update quantity of books",
             description = "Update quantity of books in the shopping cart")
     @PutMapping("/cart-items/{cartItemId}")
-    public UpdateQuantityDto updateQuantity(@PathVariable Long cartItemId,
-                                     @RequestBody @Valid UpdateQuantityRequestDto requestDto) {
+    public UpdateQuantityDto updateQuantity(
+            @PathVariable Long cartItemId,
+            @RequestBody @Valid UpdateQuantityRequestDto requestDto) {
         return cartItemService.update(cartItemId, requestDto);
     }
 
@@ -56,5 +57,4 @@ public class ShoppingCartController {
     public void deleteBooks(@PathVariable Long cartItemId) {
         cartItemService.delete(cartItemId);
     }
-
 }

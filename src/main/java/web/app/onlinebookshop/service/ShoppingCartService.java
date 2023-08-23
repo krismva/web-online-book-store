@@ -8,5 +8,4 @@ public interface ShoppingCartService {
     ShoppingCartDto getShoppingCart();
 
     CartItemDto addBook(CreateCartItemRequestDto requestDto);
-
 }
