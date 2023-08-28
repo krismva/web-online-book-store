@@ -8,7 +8,6 @@ import org.mapstruct.MappingTarget;
 import org.springframework.beans.factory.annotation.Autowired;
 import web.app.onlinebookshop.config.MapperConfig;
 import web.app.onlinebookshop.dto.order.OrderDto;
-import web.app.onlinebookshop.dto.order.UpdateOrderStatusRequestDto;
 import web.app.onlinebookshop.model.Order;
 import web.app.onlinebookshop.model.ShoppingCart;
 
