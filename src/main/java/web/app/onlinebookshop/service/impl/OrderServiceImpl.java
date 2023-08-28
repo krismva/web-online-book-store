@@ -11,6 +11,7 @@ import web.app.onlinebookshop.dto.order.OrderDto;
 import web.app.onlinebookshop.dto.order.PlaceOrderRequestDto;
 import web.app.onlinebookshop.dto.order.UpdateOrderStatusRequestDto;
 import web.app.onlinebookshop.exception.EntityNotFoundException;
+import web.app.onlinebookshop.mapper.OrderItemMapper;
 import web.app.onlinebookshop.mapper.OrderMapper;
 import web.app.onlinebookshop.model.CartItem;
 import web.app.onlinebookshop.model.Order;
@@ -31,6 +32,7 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
     private final OrderMapper orderMapper;
+    private final OrderItemMapper orderItemMapper;
     private final ShoppingCartRepository shoppingCartRepository;
     private final CartItemRepository cartItemRepository;
     private final CartItemService cartItemService;
@@ -51,7 +53,7 @@ public class OrderServiceImpl implements OrderService {
         Order orderFromDB = orderRepository.save(order);
 
         orderItems.forEach(orderItem -> orderItem.setOrder(orderFromDB));
-        saveOrderItems(orderItems);
+        orderItemRepository.saveAll(orderItems);
 
         cartItems.forEach(cartItem -> cartItemService.delete(cartItem.getId()));
 
@@ -84,20 +86,7 @@ public class OrderServiceImpl implements OrderService {
                     + "You need to add a book to continue");
         }
         return cartItems.stream()
-                .map(cartItem -> {
-                    OrderItem orderItem = new OrderItem();
-                    orderItem.setBook(cartItem.getBook());
-                    orderItem.setQuantity(cartItem.getQuantity());
-                    orderItem.setPrice(cartItem.getBook().getPrice());
-                    return orderItem;
-                })
-                .collect(Collectors.toSet());
-    }
-
-    private Set<OrderItem> saveOrderItems(Set<OrderItem> orderItems) {
-        return orderItems
-                .stream()
-                .map(orderItemRepository::save)
+                .map(orderItemMapper::cartItemToOrderItem)
                 .collect(Collectors.toSet());
     }
 
