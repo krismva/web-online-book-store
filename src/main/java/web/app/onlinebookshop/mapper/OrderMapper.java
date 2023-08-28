@@ -21,9 +21,6 @@ public abstract class OrderMapper {
     public abstract OrderDto orderToDto(Order order);
 
     @Mapping(target = "id", ignore = true)
-    public abstract Order updateStatusToModel(UpdateOrderStatusRequestDto requestDto);
-
-    @Mapping(target = "id", ignore = true)
     @Mapping(target = "deleted", ignore = true)
     @Mapping(target = "status", expression = "java(web.app.onlinebookshop.model.Status.PENDING)")
     @Mapping(target = "orderDate", expression = "java(java.time.LocalDateTime.now())")
