@@ -77,8 +77,10 @@ public class CartItemServiceImpl implements CartItemService {
     private boolean isCartItemBelongsToUser(Long cartItemId) {
         ShoppingCart shoppingCart = shoppingCartRepository
                 .getShoppingCartByUserId(userService.getUser().getId());
-        CartItem cartItem = cartItemRepository.findCartItemByShoppingCartId(shoppingCart.getId());
-        return cartItem.getId().equals(cartItemId);
+        Set<CartItem> cartItems = cartItemRepository
+                .findCartItemsByShoppingCartId(shoppingCart.getId());
+        return cartItems.stream()
+                .anyMatch(cartItem -> cartItem.getId().equals(cartItemId));
     }
 
     private void verifyCartItem(Long cartItemId) {
