@@ -6,6 +6,4 @@ import web.app.onlinebookshop.model.CartItem;
 
 public interface CartItemRepository extends JpaRepository<CartItem, Long> {
     Set<CartItem> findCartItemsByShoppingCartId(Long id);
-
-    CartItem findCartItemByShoppingCartId(Long shoppingCardId);
 }
