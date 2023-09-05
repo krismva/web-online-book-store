@@ -9,5 +9,4 @@ import web.app.onlinebookshop.model.Category;
 public interface CategoryRepository extends JpaRepository<Category, Long> {
     @Query("SELECT b FROM Book b JOIN b.categories c WHERE c.id = :id")
     List<Book> getBooksByCategoriesId(Long id);
-
 }
