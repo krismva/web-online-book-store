@@ -15,7 +15,7 @@ import web.app.onlinebookshop.mapper.BookMapper;
 import web.app.onlinebookshop.model.Book;
 import web.app.onlinebookshop.model.Category;
 import web.app.onlinebookshop.repository.book.BookRepository;
-import web.app.onlinebookshop.repository.book.SpecificationBuilder;
+import web.app.onlinebookshop.repository.book.BookSpecificationBuilder;
 import web.app.onlinebookshop.repository.category.CategoryRepository;
 import web.app.onlinebookshop.service.BookService;
 
@@ -25,7 +25,7 @@ public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
     private final CategoryRepository categoryRepository;
     private final BookMapper bookMapper;
-    private final SpecificationBuilder<Book> specificationBuilder;
+    private final BookSpecificationBuilder bookSpecificationBuilder;
 
     @Override
     public BookDto save(CreateBookRequestDto bookRequestDto) {
@@ -52,6 +52,9 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public void deleteById(Long id) {
+        if (!bookRepository.existsById(id)) {
+            throw new EntityNotFoundException("Can't delete book with id  " + id);
+        }
         bookRepository.deleteById(id);
     }
 
@@ -68,7 +71,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public List<BookDto> search(BookSearchParameters searchParameters) {
-        Specification<Book> bookSpecification = specificationBuilder.build(searchParameters);
+        Specification<Book> bookSpecification = bookSpecificationBuilder.build(searchParameters);
         return bookRepository.findAll(bookSpecification)
                 .stream()
                 .map(bookMapper::toDto)
